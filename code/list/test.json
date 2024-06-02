@@ -1,0 +1,49 @@
+{
+  "workspace": [
+    {
+      "PutRequest": {
+        "Item": {
+          "workspace_id": {
+            "S": "93ae508a08ea91f169b6bdc968c4a295.api.weberlo.net"
+          },
+          "current_users": { "N": "0" },
+          "expire_date": { "N": "4817552693435" },
+          "page_view_count": { "N": "0" },
+          "page_view_max": { "N": "50000" },
+          "users_max": { "N": "2" },
+          "workspace_status": { "S": "active" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "workspace_id": {
+            "S": "51b4901c0aea3d32c2c1a896335f09bc.api.weberlo.net"
+          },
+          "current_users": { "N": "1" },
+          "expire_date": { "N": "4817552693440" },
+          "page_view_count": { "N": "10000" },
+          "page_view_max": { "N": "50000" },
+          "users_max": { "N": "5" },
+          "workspace_status": { "S": "active" }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "workspace_id": {
+            "S": "d2849809a266b95016393d2e81febd05.api.weberlo.net"
+          },
+          "current_users": { "N": "2" },
+          "expire_date": { "N": "4817552693445" },
+          "page_view_count": { "N": "20000" },
+          "page_view_max": { "N": "50000" },
+          "users_max": { "N": "10" },
+          "workspace_status": { "S": "active" }
+        }
+      }
+    }
+  ]
+}

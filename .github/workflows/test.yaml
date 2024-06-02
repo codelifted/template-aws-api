@@ -1,0 +1,53 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  Test:
+    name: Test
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      ENV: dev
+      AWS_ACCOUNT_ID: 296708132636
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get CLI
+        run: make get-cli
+
+      - name: Test schema
+        run: ./wbr run -s 1
+
+      - name: Test code
+        run: ./wbr run -s 2
+
+      - name: Test mock
+        run: ./wbr run -s 3
+
+      - name: Code build
+        run: ./wbr run -s 4
+
+      - name: Code push
+        run: ./wbr run -s 5
+
+      - name: Infra deploy
+        run: ./wbr run -s 6
+
+      - name: Update schema
+        run: ./wbr run -s 7
+
+      - name: Live test
+        run: ./wbr run -s 8
+
+      - name: Rollback schema
+        run: ./wbr run -s 9
+
+      - name: Infra destroy
+        run: ./wbr run -s 10

@@ -1,0 +1,245 @@
+openapi: 3.0.2
+info:
+  title: Workspace API
+  description: Manage Workspace
+  version: 1.0.0
+servers:
+  - url: https://weberlo.com/api
+x-amazon-apigateway-request-validators:
+  all:
+    validateRequestBody: true
+    validateRequestParameters: true
+  params-only:
+    validateRequestBody: false
+    validateRequestParameters: true
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        data:
+          type: object
+  securitySchemes:
+    customAuthorizer:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: Custom authorizer
+      x-amazon-apigateway-authorizer:
+        type: request
+        identitySource: method.request.header.Authorization
+        authorizerUri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:authorization-lambda/invocations
+        authorizerResultTtlInSeconds : 60
+paths:
+  /workspace/{id}:
+    parameters:
+      - in: path
+        name: id
+        description: The ID of the workspace to find
+        required: true
+        schema:
+          type: string
+          pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89abAB][0-9a-f]{3}-[0-9a-f]{12}$'
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+    get:
+      security: [{
+        customAuthorizer: []
+      }]
+      x-amazon-apigateway-request-validator: params-only
+      x-amazon-apigateway-integration:
+        uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:service_test_get/invocations
+        passthroughBehavior: 'when_no_match'
+        httpMethod: 'GET'
+        contentHandling: 'CONVERT_TO_TEXT'
+        type: 'aws_proxy'
+      summary: Get a workspace
+      operationId: getWorkspace
+      responses:
+        '200':
+          description: Workspace Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    description: Workspace data
+                    properties:
+                      id:
+                        type: string
+                      name:
+                        type: string
+                      user_role:
+                        type: string
+                      endpoint:
+                        type: string
+                      current_users:
+                        type: integer
+                      users_max:
+                        type: integer
+                      max_page_views:
+                        type: integer
+                      current_page_views:
+                        type: integer
+                      workspace_status:
+                        type: string
+
+        '204':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /workspace:
+    options:
+      summary: CORS support
+      description: |
+        Enable CORS by returning correct headers
+      tags:
+        - CORS
+      responses:
+        200:
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        type: mock
+        requestTemplates:
+          application/json: |
+            {
+              "statusCode" : 200
+            }
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+              method.response.header.Access-Control-Allow-Methods: "'*'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+            responseTemplates:
+              application/json: |
+                {}
+    get:
+      security: [{
+        customAuthorizer: []
+      }]
+      x-amazon-apigateway-request-validator: params-only
+      x-amazon-apigateway-integration:
+        uri: arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:service_test_list/invocations
+        passthroughBehaviour: 'when_no_match'
+        httpMethod: 'GET'
+        contentHandling: 'CONVERT_TO_TEXT'
+        type: 'aws_proxy'
+      summary: Search for all the workspaces against a particular user.
+      responses:
+        '200':
+          description: Sucess
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    description:
+                      An array of workspaces that matches that the userId
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: uuid
+                        description: The ID of the workspce
+                      name:
+                        type: string
+                        description: The name of the workspce
+                      user_role:
+                        type: string
+                        description: The role of user in the workspce
+                      endpoint:
+                        type: string
+                        description: TBA
+                      current_users:
+                        type: integer
+                        description: No of current users in workspace
+                      users_max:
+                        type: integer
+                        description: No of max users allowed in workspace
+                      max_page_views:
+                        type: integer
+                        description: TBA
+                      current_page_views:
+                        type: integer
+                        description: TBA
+                      workspace_status:
+                        type: string
+                        description: State of the workspace (active | inactive)
+
+        '204':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'

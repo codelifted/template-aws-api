@@ -1,0 +1,31 @@
+{
+  "workspace": [
+    {
+      "PutRequest": {
+        "Item": {
+          "workspace_id": {
+            "S": "4e2ce920032ed98b9f0ff34cc4375e9e.api.weberlo.net"
+          },
+          "current_users": {
+            "N": "0"
+          },
+          "expire_date": {
+            "N": "4817552693435"
+          },
+          "page_view_count": {
+            "N": "0"
+          },
+          "page_view_max": {
+            "N": "50000"
+          },
+          "users_max": {
+            "N": "2"
+          },
+          "workspace_status": {
+            "S": "active"
+          }
+        }
+      }
+    }
+  ]
+}
