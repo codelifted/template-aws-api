@@ -1,0 +1,6 @@
+{
+    "endpoints": [
+        { "name": "get" },
+        { "name": "list" }
+    ]
+}
